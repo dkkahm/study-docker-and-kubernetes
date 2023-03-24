@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-backend-deployment
+  labels:
+    group: example
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: node-backend-pod
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: node-backend-pod
+        tier: backend
+    spec:
+      containers:
+        - name: node-backend-app
+          image: dkkahm/node-backend-example1:2
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            periodSeconds: 10
+            initialDelaySeconds: 5
