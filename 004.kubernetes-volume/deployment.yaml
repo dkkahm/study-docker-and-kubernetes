@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-backend-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: node-backend
+  template:
+    metadata:
+      labels:
+        app: node-backend
+    spec:
+      containers:
+        - name: node-backend
+          image: dkkahm/node-backend-example2
+          volumeMounts:
+            - mountPath: /app/contents
+              name: backend-contents
+      volumes:
+        - name: backend-contents
+          persistentVolumeClaim:
+            claimName: host-pvc
