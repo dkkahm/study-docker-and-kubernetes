@@ -10,7 +10,7 @@ app.get('/', (req, res) => {
 app.get('/put/:title/:content', (req, res) => {
     console.log(`put: ${req.params.title} ${req.params.content}`)
 
-    const filePath = `/app/contents/${req.params.title}`
+    const filePath = `/app/${process.env.CONTENTS_FOLDER}/${req.params.title}`
     try {
         fs.writeFileSync(filePath, req.params.content);
         res.send('OK')
@@ -24,7 +24,7 @@ app.get('/put/:title/:content', (req, res) => {
 app.get('/get/:title', (req, res) => {
     console.log(`get: ${req.params.title}`)
 
-    const filePath = `/app/contents/${req.params.title}`
+    const filePath = `/app/${process.env.CONTENTS_FOLDER}/${req.params.title}`
     try {
         const data = fs.readFileSync(filePath, 'utf8');
         res.send(data)

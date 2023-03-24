@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: node-backend-deployment
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: node-backend
@@ -15,6 +15,12 @@ spec:
       containers:
         - name: node-backend
           image: dkkahm/node-backend-example2
+          env:
+            - name: CONTENTS_FOLDER
+              valueFrom:
+                configMapKeyRef:
+                  name: data-store-env
+                  key: folder
           volumeMounts:
             - mountPath: /app/contents
               name: backend-contents
