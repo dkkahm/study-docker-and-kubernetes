@@ -10,5 +10,5 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: /Users/dkkam/Projects/study/study-docker-and-kubernetes/004.kubernetes-volume/data
+    path: /data
     type: DirectoryOrCreate
