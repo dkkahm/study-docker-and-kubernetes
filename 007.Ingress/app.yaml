@@ -1,0 +1,98 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: helloworld1
+  labels:
+    app: helloworld1
+spec:
+  containers:
+    - name: helloworld1
+      image: dkkahm/simple-node-app
+      env:
+        - name: PORT
+          value: '3000'
+        - name: SERVICE_NAME
+          value: helloworld1
+      ports:
+        - containerPort: 3000
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: helloworld2
+  labels:
+    app: helloworld2
+spec:
+  containers:
+    - name: helloworld2
+      image: dkkahm/simple-node-app
+      env:
+        - name: PORT
+          value: '3001'
+        - name: SERVICE_NAME
+          value: helloworld2
+      ports:
+        - containerPort: 3001
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: helloworld1-service
+spec:
+  selector:
+    app: helloworld1
+  # type: NodePort
+  ports:
+    - port: 3000
+      # nodePort: 30303
+      targetPort: 3000
+      protocol: TCP
+      name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: helloworld2-service
+spec:
+  selector:
+    app: helloworld2
+  # type: NodePort
+  ports:
+    - port: 3001
+      # nodePort: 30304
+      targetPort: 3001
+      protocol: TCP
+      name: http
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-wildcard-host
+spec:
+  ingressClassName: nginx
+  defaultBackend:
+    service:
+      name: helloworld1-service
+      port:
+        number: 3000
+  rules:
+  - host: "helloworld1.local"
+    http:
+      paths:
+      - path: "/"
+        pathType: Prefix
+        backend:
+          service:
+            name: helloworld1-service
+            port:
+              number: 3000
+  - host: "helloworld2.local"
+    http:
+      paths:
+      - path: "/"
+        pathType: Prefix
+        backend:
+          service:
+            name: helloworld2-service
+            port:
+              number: 3001
